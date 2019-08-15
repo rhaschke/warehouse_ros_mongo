@@ -99,7 +99,7 @@ TEST(MongoRos, MongoRos)
   // Simple query: find the pose with name 'qux' and return just its metadata
   // Since we're doing an equality check, we don't explicitly specify a predicate
   Query::Ptr q1 = coll.createQuery();
-  q1->append("name", "qux");
+  q1->append("name", std::string("qux"));
   vector<PoseMetaPtr> res = coll.queryList(q1, true);
   EXPECT_EQ(1u, res.size());
   EXPECT_EQ("qux", res[0]->lookupString("name"));
@@ -134,18 +134,18 @@ TEST(MongoRos, MongoRos)
 
   // Test findOne
   Query::Ptr q4 = coll.createQuery();
-  q4->append("name", "bar");
+  q4->append("name", std::string("bar"));
   EXPECT_EQ(p1, *coll.findOne(q4, false));
   EXPECT_DOUBLE_EQ(24, coll.findOne(q4, true)->lookupDouble("x"));
 
   Query::Ptr q5 = coll.createQuery();
-  q5->append("name", "barbar");
+  q5->append("name", std::string("barbar"));
   EXPECT_THROW(coll.findOne(q5, true), NoMatchingMessageException);
   EXPECT_THROW(coll.findOne(q5, false), NoMatchingMessageException);
 
   // Test update
   Metadata::Ptr m1 = coll.createMetadata();
-  m1->append("name", "barbar");
+  m1->append("name", std::string("barbar"));
   coll.modifyMetadata(q4, m1);
   EXPECT_EQ(3u, coll.count());
   EXPECT_THROW(coll.findOne(q4, false), NoMatchingMessageException);
